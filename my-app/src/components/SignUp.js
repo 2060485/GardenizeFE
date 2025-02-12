@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function SignUp() {
@@ -11,7 +12,7 @@ function SignUp() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -28,10 +29,24 @@ function SignUp() {
             setError("Passwords do not match");
             return;
         }
-        setError("");
-        // simulate storing data and navigating
-        localStorage.setItem('authToken', 'mockToken'); 
-        navigate('/');
+        setError(""); 
+
+        try {
+            const response = await axios.post("https://localhost:3001/api/users", {
+                email: formData.email,
+                password: formData.password,
+            });
+            console.log("Sign up successful:", response.data);
+            localStorage.setItem("authToken", response.data.token); 
+            navigate("/"); 
+        } catch (error) {
+            if (error.response && error.response.status === 409) {
+                setError("Account with this email already exists.");
+            } else {
+                console.error("Sign up failed", error);
+                setError("Sign up failed. Please try again.");
+            }
+        }
     };
 
     return (

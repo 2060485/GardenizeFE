@@ -1,11 +1,32 @@
-import { useState } from 'react';
-import logo from '../image/logo.png'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../image/logo.png';
 
 function Header() {
+    const navigate = useNavigate();
     const [activePage, setActivePage] = useState(window.location.pathname);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const checkToken = () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                setIsAuthenticated(true);
+            } else {
+                setIsAuthenticated(false);
+            }
+        };
+        checkToken();
+    }, []);
 
     const handleNavLinkClick = (path) => {
         setActivePage(path);
+    };
+
+    const handleSignOut = () => {
+        setIsAuthenticated(false);
+        localStorage.removeItem('token');
+        navigate('/signIn');
     };
 
     return (
@@ -19,26 +40,29 @@ function Header() {
                     </button>
                     <div className="collapse navbar-collapse justify-content-end" id='navbarNav'>
                         <ul className="navbar-nav">
-                        <li className="nav-item">
-                            <a className={`nav-link`}>Sign out</a>
-                            {/* Remove token from storage */}
-                            </li>
-                        <li className="nav-item">
-                            <a className={`nav-link `}>Notifications</a>
-                            {/* Add a notification pop up where they can view all notifications */}
-                            </li>
-                            <li className="nav-item">
-                            <a className={`nav-link ${activePage === '/settings' ? 'active' : ''}`} href="/settings"
-                                   onClick={() => handleNavLinkClick('/settings')}>Settings</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className={`nav-link ${activePage === '/signIn' ? 'active' : ''}`} href="/signIn"
-                                   onClick={() => handleNavLinkClick('/signIn')}>Sign in</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className={`nav-link ${activePage === '/signUp' ? 'active' : ''}`} href="/signUp"
-                                   onClick={() => handleNavLinkClick('/signUp')}>Sign Up</a>
-                            </li>
+                            {isAuthenticated && (
+                                <>
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${activePage === '/notifications' ? 'active' : ''}`} href="/notifications" onClick={() => handleNavLinkClick('/notifications')}>Notifications</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${activePage === '/settings' ? 'active' : ''}`} href="/settings" onClick={() => handleNavLinkClick('/settings')}>Settings</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" href="/" onClick={handleSignOut}>Sign Out</a>
+                                    </li>
+                                </>
+                            )}
+                            {!isAuthenticated && (
+                                <>
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${activePage === '/signIn' ? 'active' : ''}`} href="/signIn" onClick={() => handleNavLinkClick('/signIn')}>Sign In</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${activePage === '/signUp' ? 'active' : ''}`} href="/signUp" onClick={() => handleNavLinkClick('/signUp')}>Sign Up</a>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </div>
                 </div>

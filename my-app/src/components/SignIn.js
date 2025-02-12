@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function SignIn() {
@@ -8,7 +9,7 @@ function SignIn() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
     
         if (!email || !password) {
@@ -16,11 +17,27 @@ function SignIn() {
             return;
         }
 
-        // store with real token
-        localStorage.setItem('authToken', 'mockToken'); 
-        navigate('/');
+        try {
+            const response = await axios.post('https://localhost:3001/api/login', {
+                email: email,
+                password: password
+            });
+
+            console.log(response.data); // Log the response object
+            
+            // Check if token exists in the response
+            if (response.data.token) {
+                localStorage.setItem('authToken', response.data.token); // Store the token in localStorage
+                navigate('/'); // Navigate to home page if successful login
+            } else {
+                setError('Invalid credentials. Please try again.'); // Set error if credentials are incorrect
+            }
+        } catch (error) {
+            console.error('Login failed', error);
+            setError('An error occurred. Please try again later.');
+        }
     };
-    // make box centered
+    
     return (
         <div className="container">
             <div className="row justify-content-center">
