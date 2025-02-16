@@ -6,6 +6,7 @@ import NotFound from './NotFound';
 import Settings from './Settings';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import PlantList from './PlantLeaderboard';
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const AppRoutes = () => {
       <Route path="/Settings" element={<Settings/>} />
       <Route path="/SignIn" element={<SignIn/>} />
       <Route path="/SignUp" element={<SignUp/>} />
+      <Route path="/Plants" element={<PlantList/>} />
       <Route path="*" element={<NotFound/>} /> 
     </Routes>
   );
