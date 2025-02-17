@@ -9,13 +9,15 @@ function Header() {
 
     useEffect(() => {
         const checkToken = () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('authToken');
+
             if (token) {
                 setIsAuthenticated(true);
             } else {
                 setIsAuthenticated(false);
             }
         };
+
         checkToken();
     }, []);
 
@@ -25,7 +27,7 @@ function Header() {
 
     const handleSignOut = () => {
         setIsAuthenticated(false);
-        localStorage.removeItem('token');
+        localStorage.removeItem('authToken');
         navigate('/signIn');
     };
 
@@ -38,9 +40,9 @@ function Header() {
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className="collapse navbar-collapse justify-content-end" id='navbarNav'>
+                    <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul className="navbar-nav">
-                            {isAuthenticated && (
+                            {isAuthenticated ? (
                                 <>
                                     <li className="nav-item">
                                         <a className={`nav-link ${activePage === '/notifications' ? 'active' : ''}`} href="/notifications" onClick={() => handleNavLinkClick('/notifications')}>Notifications</a>
@@ -52,8 +54,7 @@ function Header() {
                                         <a className="nav-link" href="/" onClick={handleSignOut}>Sign Out</a>
                                     </li>
                                 </>
-                            )}
-                            {!isAuthenticated && (
+                            ) : (
                                 <>
                                     <li className="nav-item">
                                         <a className={`nav-link ${activePage === '/signIn' ? 'active' : ''}`} href="/signIn" onClick={() => handleNavLinkClick('/signIn')}>Sign In</a>

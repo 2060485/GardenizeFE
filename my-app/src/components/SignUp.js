@@ -37,8 +37,7 @@ function SignUp() {
                 password: formData.password,
             });
             console.log("Sign up successful:", response.data);
-            localStorage.setItem("authToken", response.data.token); 
-            navigate("/"); 
+            navigate("/SignIn"); 
         } catch (error) {
             if (error.response && error.response.status === 409) {
                 setError("Account with this email already exists.");
