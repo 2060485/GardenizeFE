@@ -8,8 +8,9 @@ function PlantList() {
     const [error, setError] = useState("");
     const [editingPlant, setEditingPlant] = useState(null);
     const [editFormData, setEditFormData] = useState({ name: "", type: "", captorID: "" });
+    const [showModal, setShowModal] = useState(false);
+    const [newPlantData, setNewPlantData] = useState({ name: "", type: "", captorID: "" });
 
-    // Updated plant types in English
     const plantTypes = [
         "Tropical",
         "Succulents and Cacti",
@@ -74,11 +75,64 @@ function PlantList() {
         }
     };
 
+    const handleNewPlantChange = (e) => {
+        setNewPlantData({ ...newPlantData, [e.target.name]: e.target.value });
+    };
+
+    const handleCreatePlant = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("https://localhost:3001/plants", newPlantData);
+            setPlants([...plants, response.data]);
+            setNewPlantData({ name: "", type: "", captorID: "" });
+            setShowModal(false);
+        } catch (err) {
+            console.error("Error creating new plant:", err);
+            setError("Failed to create new plant. Please try again.");
+        }
+    };
+
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">Plant List</h2>
             {loading && <p>Loading plants...</p>}
             {error && <div className="alert alert-danger">{error}</div>}
+            
+            <div className="text-center mb-4">
+                <button className="btn btn-success" onClick={() => setShowModal(true)}>
+                    Create New Plant
+                </button>
+            </div>
+
+            {showModal && (
+                <div className="modal d-block" tabIndex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Create New Plant</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                            </div>
+                            <form onSubmit={handleCreatePlant}>
+                                <div className="modal-body">
+                                    <input type="text" className="form-control mb-3" placeholder="Plant Name" name="name" value={newPlantData.name} onChange={handleNewPlantChange} required />
+                                    <select className="form-select mb-3" name="type" value={newPlantData.type} onChange={handleNewPlantChange} required>
+                                        <option value="">Select Type</option>
+                                        {plantTypes.map((type, index) => (
+                                            <option key={index} value={type}>{type}</option>
+                                        ))}
+                                    </select>
+                                    <input type="text" className="form-control mb-3" placeholder="Captor ID (optional)" name="captorID" value={newPlantData.captorID} onChange={handleNewPlantChange} />
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="submit" className="btn btn-success">Create</button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="row">
                 {plants.map((plant) => (
                     <div key={plant._id} className="col-md-4 mb-4">
@@ -86,71 +140,23 @@ function PlantList() {
                             <div className="card-body">
                                 {editingPlant === plant._id ? (
                                     <form onSubmit={handleEditSubmit}>
-                                        <div className="mb-2">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                name="name"
-                                                value={editFormData.name}
-                                                onChange={handleEditChange}
-                                                placeholder="Name"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="mb-2">
-                                            <select
-                                                className="form-select"
-                                                name="type"
-                                                value={editFormData.type}
-                                                onChange={handleEditChange}
-                                                required
-                                            >
-                                                <option value="">Select Type</option>
-                                                {plantTypes.map((type, index) => (
-                                                    <option key={index} value={type}>
-                                                        {type}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="mb-2">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                name="captorID"
-                                                value={editFormData.captorID}
-                                                onChange={handleEditChange}
-                                                placeholder="Captor ID"
-                                            />
-                                        </div>
-                                        <button type="submit" className="btn btn-success me-2">Save</button>
-                                        <button
-                                            type="button"
-                                            className="btn btn-secondary"
-                                            onClick={() => setEditingPlant(null)}
-                                        >
-                                            Cancel
-                                        </button>
+                                        <input type="text" className="form-control mb-2" name="name" value={editFormData.name} onChange={handleEditChange} required />
+                                        <select className="form-select mb-2" name="type" value={editFormData.type} onChange={handleEditChange} required>
+                                            {plantTypes.map((type, index) => (
+                                                <option key={index} value={type}>{type}</option>
+                                            ))}
+                                        </select>
+                                        <input type="text" className="form-control mb-2" name="captorID" value={editFormData.captorID} onChange={handleEditChange} placeholder="Captor ID (optional)" />
+                                        <button type="submit" className="btn btn-primary me-2">Save</button>
+                                        <button type="button" className="btn btn-secondary" onClick={() => setEditingPlant(null)}>Cancel</button>
                                     </form>
                                 ) : (
                                     <>
                                         <h5 className="card-title">{plant.name}</h5>
                                         <p className="card-text">Type: {plant.type}</p>
-                                        {plant.captorID && (
-                                            <p className="card-text">Captor ID: {plant.captorID}</p>
-                                        )}
-                                        <button
-                                            className="btn btn-primary me-2"
-                                            onClick={() => handleEditClick(plant)}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => handleDelete(plant._id)}
-                                        >
-                                            Delete
-                                        </button>
+                                        {plant.captorID && <p className="card-text">Captor ID: {plant.captorID}</p>}
+                                        <button className="btn btn-primary me-2" onClick={() => handleEditClick(plant)}>Edit</button>
+                                        <button className="btn btn-danger" onClick={() => handleDelete(plant._id)}>Delete</button>
                                     </>
                                 )}
                             </div>
