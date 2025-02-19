@@ -13,13 +13,6 @@ import PrivateRoute from './PrivateRoute';
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home/>} />
-      <Route path="/Settings" element={<Settings/>} />
-      <Route path="/SignIn" element={<SignIn/>} />
-      <Route path="/SignUp" element={<SignUp/>} />
-      <Route path="/Plants" element={<PlantList/>} />
-      <Route path="*" element={<NotFound/>} /> 
-      <Route path="/" element={<Home />} />
       <Route path="/Settings" 
       element={
           <PrivateRoute>
@@ -27,6 +20,13 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
+      <Route path="/Plants" element={
+        <PrivateRoute>
+          <PlantList/>
+        </PrivateRoute>
+        } 
+      />
+      <Route path="/" element={<Home />} />
       <Route path="/SignIn" element={<SignIn />} />
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="*" element={<NotFound />} /> 
