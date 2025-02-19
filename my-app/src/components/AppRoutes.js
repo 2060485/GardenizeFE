@@ -7,6 +7,8 @@ import Settings from './Settings';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import PlantList from './PlantLeaderboard';
+import PrivateRoute from './PrivateRoute';  
+
 
 const AppRoutes = () => {
   return (
@@ -17,6 +19,17 @@ const AppRoutes = () => {
       <Route path="/SignUp" element={<SignUp/>} />
       <Route path="/Plants" element={<PlantList/>} />
       <Route path="*" element={<NotFound/>} /> 
+      <Route path="/" element={<Home />} />
+      <Route path="/Settings" 
+      element={
+          <PrivateRoute>
+            <Settings />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/SignIn" element={<SignIn />} />
+      <Route path="/SignUp" element={<SignUp />} />
+      <Route path="*" element={<NotFound />} /> 
     </Routes>
   );
 };
