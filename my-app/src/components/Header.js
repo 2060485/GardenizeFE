@@ -33,8 +33,6 @@ function Header() {
                             Authorization: `Bearer ${localStorage.getItem('authToken')}`,
                         },
                     });
-
-                    console.log(response.data);
                     setNotifications(response.data);
 
                     let unreadCount = 0;
@@ -68,27 +66,22 @@ function Header() {
         setShowNotifications(!showNotifications);
     };
 
-    const deleteNotification = async (notificationId) => {
+    const deleteNotification = async (notifId) => {
         try {
-            await axios.delete(`https://localhost:3001/api/notifications/${notificationId}`, {
+            await axios.delete(`https://localhost:3001/api/notifications/${notifId}`, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                 },
             });
 
-            setNotifications(prevNotifications =>
-                prevNotifications.filter(notification => notification._id !== notificationId)
-            );
-
-            let unreadCount = 0;
-            for (const notification of notifications) {
-                if (!notification.isRead) {
-                    unreadCount++;
-                }
-            }
-            setUnreadCount(unreadCount);
+            setNotifications((prevNotifications) => {
+                const updatedNotifications = prevNotifications.filter((notification) => notification.notifId !== notifId);
+                const newUnreadCount = updatedNotifications.filter((notification) => !notification.isRead).length;
+                setUnreadCount(newUnreadCount);
+                return updatedNotifications;
+            });
         } catch (error) {
-            console.error('Error deleting notification:', error);
+            console.error("Error deleting notification:", error);
         }
     };
 
@@ -151,11 +144,12 @@ function Header() {
                                                             </div>
                                                             <button
                                                                 className="btn btn-sm btn-danger position-absolute"
-                                                                style={{ bottom: '10px', right: '10px' }}
-                                                                onClick={() => deleteNotification(notification._id)}
+                                                                style={{ bottom: "10px", right: "10px" }}
+                                                                onClick={() => deleteNotification(notification.notifId)}
                                                             >
                                                                 X
                                                             </button>
+
                                                         </li>
                                                     ))}
                                                 </ul>
