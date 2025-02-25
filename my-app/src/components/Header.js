@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import logo from '../image/logo.png';
 
 function Header() {
     const navigate = useNavigate();
     const [activePage, setActivePage] = useState(window.location.pathname);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -16,8 +18,15 @@ function Header() {
             const token = localStorage.getItem('authToken');
             if (token) {
                 setIsAuthenticated(true);
+                const decodedToken = jwtDecode(token);
+                if (decodedToken.role === 'admin') {
+                    setIsAdmin(true);
+                } else {
+                    setIsAdmin(false);
+                }
             } else {
                 setIsAuthenticated(false);
+                setIsAdmin(false);
             }
         };
 
@@ -57,6 +66,7 @@ function Header() {
 
     const handleSignOut = () => {
         setIsAuthenticated(false);
+        setIsAdmin(false);
         localStorage.removeItem('authToken');
         navigate('/signIn');
     };
@@ -102,10 +112,23 @@ function Header() {
                     {isAuthenticated ? (
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
-                                <li className="nav-item">
-                                    <a className={`nav-link ${activePage === '/plantLeaderboard' ? 'active' : ''}`}
-                                        href="/plants" onClick={() => handleNavLinkClick('/plantLeaderboard')}>Your Plants</a>
-                                </li>
+                                {isAdmin ? (
+                                    <>
+                                        <li className="nav-item">
+                                            <a className={`nav-link ${activePage === '/plantLeaderboard' ? 'active' : ''}`}
+                                                href="/plants" onClick={() => handleNavLinkClick('/plantLeaderboard')}>All Plants</a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a className={`nav-link ${activePage === '/usermanagement' ? 'active' : ''}`}
+                                                href="/users" onClick={() => handleNavLinkClick('/usermanagement')}>All Users</a>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item">
+                                        <a className={`nav-link ${activePage === '/yourplants' ? 'active' : ''}`}
+                                            href="/yourplants" onClick={() => handleNavLinkClick('/yourplants')}>Your Plants</a>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     ) : null}
