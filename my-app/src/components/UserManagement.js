@@ -75,7 +75,6 @@ function UserManagement() {
             setError('Failed to update user. Please try again.');
         }
     };
-     
 
     return (
         <div className="container mt-5">
@@ -98,14 +97,19 @@ function UserManagement() {
                                             onChange={handleEditChange}
                                             required
                                         />
-                                        <input
-                                            type="text"
-                                            className="form-control mb-2"
-                                            name="role"
-                                            value={editFormData.role}
-                                            onChange={handleEditChange}
-                                            required
-                                        />
+                                        <div className="mb-2">
+                                            <label htmlFor="role" className="form-label">Role</label>
+                                            <select
+                                                className="form-select"
+                                                name="role"
+                                                value={editFormData.role}
+                                                onChange={handleEditChange}
+                                                required
+                                            >
+                                                <option value="admin">Admin</option>
+                                                <option value="user">User</option>
+                                            </select>
+                                        </div>
                                         <div className="form-check mb-2">
                                             <input
                                                 className="form-check-input"
