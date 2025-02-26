@@ -10,6 +10,7 @@ import PlantList from './PlantLeaderboard';
 import PrivateRoute from './PrivateRoute';
 import UserManagement from './UserManagement';
 import Forbidden from './Forbidden';
+import YourPlants from './YourPlants';
 
 const AppRoutes = () => {
   return (
@@ -18,6 +19,13 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <Settings />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/YourPlants"
+        element={
+          <PrivateRoute>
+            <YourPlants />
           </PrivateRoute>
         }
       />
