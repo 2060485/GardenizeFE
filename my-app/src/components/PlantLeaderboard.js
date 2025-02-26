@@ -12,8 +12,6 @@ function PlantList() {
     const [newPlantData, setNewPlantData] = useState({ name: "", type: "", captorID: "" });
     const [captorIds, setCaptorIds] = useState([]);
     const [hasPi, setHasPi] = useState(false);
-    const [addPiLoading, setAddPiLoading] = useState(false);
-    const [addPiError, setAddPiError] = useState(null);
     const [piModalVisible, setPiModalVisible] = useState(false);
     const [piData, setPiData] = useState({ piId: "", authNumber: "" });
     const [deletePiModalVisible, setDeletePiModalVisible] = useState(false);
@@ -180,8 +178,6 @@ function PlantList() {
     };
 
     const handleAddPi = async () => {
-        setAddPiLoading(true);
-        setAddPiError(null);
 
         try {
             const response = await axios.put("https://localhost:3001/api/pi", {
@@ -200,12 +196,11 @@ function PlantList() {
                 setPiModalVisible(false);
                 fetchCaptorHumidity();
                 fetchPlants();
+                window.location.reload();
             }
         } catch (err) {
             console.error("Error adding Pi:", err);
-            setAddPiError("Failed to add Raspberry Pi. Please try again.");
         }
-        setAddPiLoading(false);
     };
 
     const handleDeletePi = async () => {
@@ -222,6 +217,7 @@ function PlantList() {
                 setDeletePiModalVisible(false);
                 setPlants([]);
                 fetchPlants();
+                window.location.reload();
             }
         } catch (err) {
             console.error("Error deleting Pi:", err);
@@ -432,7 +428,7 @@ function PlantList() {
                                                 </option>
                                             ))}
                                         </select>
-                                        <button type="submit" className="btn btn-success">Save</button>
+                                        <button type="submit" className="btn btn-primary">Save</button>
                                     </form>
                                 ) : (
                                     <>
@@ -441,7 +437,7 @@ function PlantList() {
                                         <p>Captor ID: {plant.captorID}</p>
                                         <p>Humidity: {captorHumidity[plant.captorID] || 'N/A'}%</p>
                                         <button
-                                            className="btn btn-warning"
+                                            className="btn btn-primary"
                                             onClick={() => handleEditClick(plant)}
                                         >
                                             Edit
