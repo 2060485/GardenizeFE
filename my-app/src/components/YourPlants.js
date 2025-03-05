@@ -125,7 +125,11 @@ function YourPlants() {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this plant?")) {
             try {
-                await axios.delete(`https://gardenizebe.onrender.com/plants/${id}`);
+                await axios.delete(`https://gardenizebe.onrender.com/plants/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                    },
+                });
                 setPlants(plants.filter((plant) => plant._id !== id));
             } catch (err) {
                 console.error("Error deleting plant:", err);
@@ -150,7 +154,11 @@ function YourPlants() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://gardenizebe.onrender.com/plants/${editingPlant}`, editFormData);
+            const response = await axios.put(`https://gardenizebe.onrender.com/plants/${editingPlant}`, editFormData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            });
             setPlants(plants.map((plant) => (plant._id === editingPlant ? response.data : plant)));
             setEditingPlant(null);
             setEditFormData({ name: "", type: "", captorID: "" });
@@ -167,7 +175,11 @@ function YourPlants() {
     const handleCreatePlant = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://gardenizebe.onrender.com/plants", newPlantData);
+            const response = await axios.post("https://gardenizebe.onrender.com/plants", newPlantData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            });
             setPlants([...plants, response.data]);
             setNewPlantData({ name: "", type: "", captorID: "" });
             setShowModal(false);
