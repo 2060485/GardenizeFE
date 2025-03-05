@@ -63,7 +63,7 @@ function YourPlants() {
     useEffect(() => {
         const fetchCaptorIds = async () => {
             try {
-                const response = await axios.get("https://localhost:3001/plants/captor", {
+                const response = await axios.get("https://localhost:3001/plants/captor", {  
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                     },
@@ -125,7 +125,11 @@ function YourPlants() {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this plant?")) {
             try {
-                await axios.delete(`https://localhost:3001/plants/${id}`);
+                await axios.delete(`https://localhost:3001/plants/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                    },
+                });
                 setPlants(plants.filter((plant) => plant._id !== id));
             } catch (err) {
                 console.error("Error deleting plant:", err);
@@ -150,7 +154,11 @@ function YourPlants() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://localhost:3001/plants/${editingPlant}`, editFormData);
+            const response = await axios.put(`https://localhost:3001/plants/${editingPlant}`, editFormData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            });
             setPlants(plants.map((plant) => (plant._id === editingPlant ? response.data : plant)));
             setEditingPlant(null);
             setEditFormData({ name: "", type: "", captorID: "" });
@@ -167,7 +175,11 @@ function YourPlants() {
     const handleCreatePlant = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://localhost:3001/plants", newPlantData);
+            const response = await axios.post("https://localhost:3001/plants", newPlantData,{
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            });
             setPlants([...plants, response.data]);
             setNewPlantData({ name: "", type: "", captorID: "" });
             setShowModal(false);
