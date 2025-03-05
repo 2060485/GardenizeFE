@@ -32,7 +32,7 @@ function SignUp() {
         setError(""); 
 
         try {
-            const response = await axios.post("https://localhost:3001/api/users", {
+            const response = await axios.post("https://gardenizebe.onrender.com/api/users", {
                 email: formData.email,
                 password: formData.password,
             });

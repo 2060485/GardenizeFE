@@ -10,7 +10,7 @@ function Settings() {
     useEffect(() => {
         const fetchUserSettings = async () => {
             try {
-                const response = await axios.get('https://localhost:3001/api/settings', {
+                const response = await axios.get('https://gardenizebe.onrender.com/api/settings', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     }
@@ -39,7 +39,7 @@ function Settings() {
 
     const handleSaveSettings = async () => {
         try {
-            const response = await axios.put('https://localhost:3001/api/settings',
+            const response = await axios.put('https://gardenizebe.onrender.com/api/settings',
                 {
                     enableNotifications: notificationsEnabled,
                     enableAlarm: alarmEnabled,

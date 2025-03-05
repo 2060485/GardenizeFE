@@ -13,7 +13,7 @@ function UserManagement() {
         const fetchUsers = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const response = await axios.get('https://localhost:3001/api/users', {
+                const response = await axios.get('https://gardenizebe.onrender.com/api/users', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUsers(response.data);
@@ -31,7 +31,7 @@ function UserManagement() {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
                 const token = localStorage.getItem('authToken');
-                await axios.delete(`https://localhost:3001/api/users/${id}`, {
+                await axios.delete(`https://gardenizebe.onrender.com/api/users/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUsers(users.filter(user => user._id !== id));
@@ -61,7 +61,7 @@ function UserManagement() {
         try {
             const token = localStorage.getItem('authToken');
             const response = await axios.put(
-                `https://localhost:3001/api/users/${editingUser}`,
+                `https://gardenizebe.onrender.com/api/users/${editingUser}`,
                 { ...editFormData },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

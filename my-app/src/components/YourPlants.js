@@ -32,7 +32,7 @@ function YourPlants() {
     useEffect(() => {
         const checkUserPis = async () => {
             try {
-                const response = await axios.get("https://localhost:3001/api/pi", {
+                const response = await axios.get("https://gardenizebe.onrender.com/api/pi", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                     },
@@ -63,7 +63,7 @@ function YourPlants() {
     useEffect(() => {
         const fetchCaptorIds = async () => {
             try {
-                const response = await axios.get("https://localhost:3001/plants/captor", {
+                const response = await axios.get("https://gardenizebe.onrender.com/plants/captor", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                     },
@@ -79,7 +79,7 @@ function YourPlants() {
 
     const fetchPlants = async () => {
         try {
-            const response = await axios.get("https://localhost:3001/plants/user", {
+            const response = await axios.get("https://gardenizebe.onrender.com/plants/user", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                 },
@@ -99,7 +99,7 @@ function YourPlants() {
 
     const fetchCaptorHumidity = async () => {
         try {
-            const response = await axios.get("https://localhost:3001/plants/captorInfo", {
+            const response = await axios.get("https://gardenizebe.onrender.com/plants/captorInfo", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                 },
@@ -125,7 +125,7 @@ function YourPlants() {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this plant?")) {
             try {
-                await axios.delete(`https://localhost:3001/plants/${id}`);
+                await axios.delete(`https://gardenizebe.onrender.com/plants/${id}`);
                 setPlants(plants.filter((plant) => plant._id !== id));
             } catch (err) {
                 console.error("Error deleting plant:", err);
@@ -150,7 +150,7 @@ function YourPlants() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://localhost:3001/plants/${editingPlant}`, editFormData);
+            const response = await axios.put(`https://gardenizebe.onrender.com/plants/${editingPlant}`, editFormData);
             setPlants(plants.map((plant) => (plant._id === editingPlant ? response.data : plant)));
             setEditingPlant(null);
             setEditFormData({ name: "", type: "", captorID: "" });
@@ -167,7 +167,7 @@ function YourPlants() {
     const handleCreatePlant = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://localhost:3001/plants", newPlantData);
+            const response = await axios.post("https://gardenizebe.onrender.com/plants", newPlantData);
             setPlants([...plants, response.data]);
             setNewPlantData({ name: "", type: "", captorID: "" });
             setShowModal(false);
@@ -180,7 +180,7 @@ function YourPlants() {
     const handleAddPi = async () => {
 
         try {
-            const response = await axios.put("https://localhost:3001/api/pi", {
+            const response = await axios.put("https://gardenizebe.onrender.com/api/pi", {
                 piId: piData.piId,
                 authNumber: piData.authNumber,
             }, {
@@ -205,7 +205,7 @@ function YourPlants() {
 
     const handleDeletePi = async () => {
         try {
-            const response = await axios.put("https://localhost:3001/api/deletePi", { piId: parseInt(deletePiId, 10) }, {
+            const response = await axios.put("https://gardenizebe.onrender.com/api/deletePi", { piId: parseInt(deletePiId, 10) }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                 },

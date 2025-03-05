@@ -37,7 +37,7 @@ function Header() {
         if (isAuthenticated) {
             const fetchNotifications = async () => {
                 try {
-                    const response = await axios.get('https://localhost:3001/api/notifications', {
+                    const response = await axios.get('https://gardenizebe.onrender.com/api/notifications', {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('authToken')}`,
                         },
@@ -78,7 +78,7 @@ function Header() {
 
     const deleteNotification = async (notifId) => {
         try {
-            await axios.delete(`https://localhost:3001/api/notifications/${notifId}`, {
+            await axios.delete(`https://gardenizebe.onrender.com/api/notifications/${notifId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                 },
